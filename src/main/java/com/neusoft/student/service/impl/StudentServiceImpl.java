@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Service("studentService")
 public class StudentServiceImpl implements StudentService {
-// 注意上面的部分 studentService要进行标记
+
     @Autowired
     StudentMapper studentMapper;
 

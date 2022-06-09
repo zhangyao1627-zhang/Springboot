@@ -1,7 +1,7 @@
 package com.neusoft.controller;
 
 import com.neusoft.common.base.BaseController;
-import com.neusoft.common.base.BaseModelJson;
+import com.neusoft.common.base.BaseModelJsonPaging;
 import com.neusoft.common.entity.User;
 import com.neusoft.common.exception.BusinessException;
 import com.neusoft.common.validationGroup.SelectGroup;
@@ -11,8 +11,7 @@ import com.neusoft.rolemenu.service.RoleMenuService;
 import com.neusoft.student.entity.Student;
 import com.neusoft.student.service.StudentService;
 import com.neusoft.teacher.entity.Teacher;
-import com.neusoft.teacher.service.impl.TeacherService;
-import com.neusoft.usertype.entity.Usertype;
+import com.neusoft.teacher.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -30,19 +29,16 @@ public class UserController extends BaseController {
 
     @Autowired
     StudentService studentService;
-
     @Autowired
     TeacherService teacherService;
-
+    @Autowired
+    MenuService menuService;
     @Autowired
     RoleMenuService roleMenuService;
 
-    @Autowired
-    MenuService menuService;
-
     @PostMapping("/checkUser")
-    public BaseModelJson checkUser(@Validated({SelectGroup.class}) @RequestBody User user,
-                                   BindingResult bindingResult) {
+    public BaseModelJsonPaging checkUser(@Validated({SelectGroup.class}) @RequestBody User user,
+                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw BusinessException.USER_INVALID.newInstance(this.getErrorResponse(bindingResult),
                     new Object[]{user.toString()});
@@ -62,7 +58,7 @@ public class UserController extends BaseController {
                     user.setUsername(student.getName());
                     List<Menu> roleMenus = getRoleMenus(usertypeid);
                     user.setMenus(roleMenus);
-                    BaseModelJson<User> baseModel = new BaseModelJson<>();
+                    BaseModelJsonPaging<User> baseModel = new BaseModelJsonPaging<>();
                     baseModel.data = user;
                     baseModel.code = 200;
                     return baseModel;
@@ -77,7 +73,7 @@ public class UserController extends BaseController {
                     user.setUsername(teacher.getName());
                     List<Menu> roleMenus = getRoleMenus(usertypeid);
                     user.setMenus(roleMenus);
-                    BaseModelJson<User> baseModel = new BaseModelJson<>();
+                    BaseModelJsonPaging<User> baseModel = new BaseModelJsonPaging<>();
                     baseModel.data = user;
                     baseModel.code = 200;
                     return baseModel;
@@ -86,18 +82,17 @@ public class UserController extends BaseController {
         }
     }
 
-    private List<Menu> getRoleMenus(int usertypeid){
+    private List<Menu> getRoleMenus(int usertypeid) {
         List<Integer> menuIds = roleMenuService.getMenuIds(usertypeid);
         List<Menu> menus = menuService.getMenus("");
-
         List<Menu> roleMenus = new ArrayList<>();
-
-        for (Menu menu:menus){
-            if(menuIds.contains((menu.getId()))){
+        for (Menu menu : menus) {
+            if (menuIds.contains((menu.getId()))) {
                 roleMenus.add(menu);
             }
             List<Menu> children = menu.getChildren();
-            children.removeIf(child -> !menuIds.contains(child.getId()));
+            if(children!=null)
+                children.removeIf(child -> !menuIds.contains(child.getId()));
         }
         return roleMenus;
     }

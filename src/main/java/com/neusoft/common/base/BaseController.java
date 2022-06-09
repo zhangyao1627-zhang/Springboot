@@ -25,12 +25,11 @@ public class BaseController {
             baseModel.message = exception.getMessage();
             baseModel.code = ((BusinessException) exception).getCode();
             this.logger.error("errormessage:{}", baseModel.toString());
-        }
-        else if (exception instanceof NoHandlerFoundException) {
+        } else if (exception instanceof NoHandlerFoundException) {
             baseModel.message = exception.getMessage();
             baseModel.code = 404;
             this.logger.error("errormessage:{}", baseModel.toString());
-        }else{
+        } else {
             {
                 baseModel.message = "There is system error!!!";
                 baseModel.code = 500;
@@ -41,16 +40,17 @@ public class BaseController {
     }
 
     //BindingResult
-    public String getErrorResponse(BindingResult bindingResult){
+    public String getErrorResponse(BindingResult bindingResult) {
         StringBuffer sbu = new StringBuffer();
         Iterator iterator = bindingResult.getAllErrors().iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             ObjectError objectError = (ObjectError) iterator.next();
             this.logger.info(objectError.getCode());
             this.logger.info(objectError.getDefaultMessage());
             sbu.append(objectError.getDefaultMessage()).append(",");
         }
-        sbu.delete(sbu.length()-1,sbu.length());
+        sbu.delete(sbu.length() - 1, sbu.length());
         return sbu.toString();
     }
+
 }

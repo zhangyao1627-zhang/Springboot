@@ -15,6 +15,8 @@ public class Student {
     @NotEmpty(message = "The user id is mandatory", groups = {SelectGroup.class, InsertGroup.class, UpdateGroup.class, DeleteGroup.class})
     String id;
     String name;
+    @NotNull(message = "The password is required", groups = {SelectGroup.class, InsertGroup.class, UpdateGroup.class, DeleteGroup.class})
+    @NotEmpty(message = "The password is mandatory", groups = {SelectGroup.class, InsertGroup.class, UpdateGroup.class, DeleteGroup.class})
     String password;
     String gender;
 

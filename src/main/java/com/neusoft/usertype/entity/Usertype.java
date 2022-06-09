@@ -13,9 +13,9 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 public class Usertype {
-    @NotNull(message = "The user id is required", groups = {SelectGroup.class, InsertGroup.class, UpdateGroup.class, DeleteGroup.class})
+    @NotNull(message = "The utid is required", groups = {SelectGroup.class, InsertGroup.class, UpdateGroup.class, DeleteGroup.class})
     int utid;
-    @NotEmpty(message = "The user id is mandatory", groups = {SelectGroup.class, InsertGroup.class, UpdateGroup.class, DeleteGroup.class})
+    @NotEmpty(message = "The utname is mandatory", groups = {SelectGroup.class, InsertGroup.class, UpdateGroup.class, DeleteGroup.class})
     String utname;
     String menus;
 }
